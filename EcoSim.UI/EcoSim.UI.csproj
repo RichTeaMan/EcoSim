@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A4F1ABA0-4129-463F-A850-568F195AC8DA}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>EcoSim.UI</RootNamespace>
+    <AssemblyName>EcoSim.UI</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Build\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Console.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Console.Designer.cs">
+      <DependentUpon>Console.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateWorld\WorldCreateWorld.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CreateWorld\WorldCreateWorld.Designer.cs">
+      <DependentUpon>WorldCreateWorld.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateWorld\FloraCreateWorld.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CreateWorld\FloraCreateWorld.Designer.cs">
+      <DependentUpon>FloraCreateWorld.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateWorld\CreateWorld.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateWorld\CreateWorld.Designer.cs">
+      <DependentUpon>CreateWorld.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreateWorld\CreaturesCreateWorld.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="CreateWorld\CreaturesCreateWorld.Designer.cs">
+      <DependentUpon>CreaturesCreateWorld.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Draw.cs" />
+    <Compile Include="Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Main.Designer.cs">
+      <DependentUpon>Main.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WorldView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WorldView.Designer.cs">
+      <DependentUpon>WorldView.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Console.resx">
+      <DependentUpon>Console.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateWorld\WorldCreateWorld.resx">
+      <DependentUpon>WorldCreateWorld.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateWorld\FloraCreateWorld.resx">
+      <DependentUpon>FloraCreateWorld.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateWorld\CreateWorld.resx">
+      <DependentUpon>CreateWorld.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreateWorld\CreaturesCreateWorld.resx">
+      <DependentUpon>CreaturesCreateWorld.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Main.resx">
+      <DependentUpon>Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="WorldView.resx">
+      <DependentUpon>WorldView.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EcoSim.Logic\EcoSim.Logic.csproj">
+      <Project>{f5e8930c-bb31-47a5-9af1-7f5d8d70d455}</Project>
+      <Name>EcoSim.Logic</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
