@@ -56,6 +56,8 @@ namespace EcoSim.UI
                 lblAltitude.Text = "Altitude: NA";
             
             lblAltitude.Text += Environment.NewLine + String.Format("Coordinates: {0}, {1}", WorldView.XCoordinate, WorldView.YCoordinate);
+
+            lbl_frameInfo.Text = string.Format("Frames Drawn: {0} Frames Painted: {1}", WorldView.FramesDrawn, WorldView.FramesPainted);
         }
 
         private void WorldView_MouseMove(object sender, MouseEventArgs e)

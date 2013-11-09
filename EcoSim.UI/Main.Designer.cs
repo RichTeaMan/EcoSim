@@ -34,8 +34,9 @@
             this.setupSimulationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.WorldTimer = new System.Windows.Forms.Timer(this.components);
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.lblAltitude = new System.Windows.Forms.Label();
             this.WorldView = new EcoSim.UI.WorldView();
+            this.lblAltitude = new System.Windows.Forms.Label();
+            this.lbl_frameInfo = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
@@ -84,15 +85,6 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(760, 447);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
-            // lblAltitude
-            // 
-            this.lblAltitude.AutoSize = true;
-            this.lblAltitude.Location = new System.Drawing.Point(606, 0);
-            this.lblAltitude.Name = "lblAltitude";
-            this.lblAltitude.Size = new System.Drawing.Size(42, 13);
-            this.lblAltitude.TabIndex = 2;
-            this.lblAltitude.Text = "Altitude";
-            // 
             // WorldView
             // 
             this.WorldView.AllowNavigation = true;
@@ -102,16 +94,36 @@
             this.WorldView.Name = "WorldView";
             this.WorldView.Size = new System.Drawing.Size(597, 441);
             this.WorldView.TabIndex = 1;
+            this.WorldView.ViewScale = 1D;
             this.WorldView.XCoordinate = 0;
             this.WorldView.YCoordinate = 0;
             this.WorldView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.WorldView_MouseClick);
             this.WorldView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.WorldView_MouseMove);
+            // 
+            // lblAltitude
+            // 
+            this.lblAltitude.AutoSize = true;
+            this.lblAltitude.Location = new System.Drawing.Point(606, 0);
+            this.lblAltitude.Name = "lblAltitude";
+            this.lblAltitude.Size = new System.Drawing.Size(42, 13);
+            this.lblAltitude.TabIndex = 2;
+            this.lblAltitude.Text = "Altitude";
+            // 
+            // lbl_frameInfo
+            // 
+            this.lbl_frameInfo.AutoSize = true;
+            this.lbl_frameInfo.Location = new System.Drawing.Point(645, 0);
+            this.lbl_frameInfo.Name = "lbl_frameInfo";
+            this.lbl_frameInfo.Size = new System.Drawing.Size(19, 13);
+            this.lbl_frameInfo.TabIndex = 3;
+            this.lbl_frameInfo.Text = "----";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(760, 471);
+            this.Controls.Add(this.lbl_frameInfo);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -135,6 +147,7 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private WorldView WorldView;
         private System.Windows.Forms.Label lblAltitude;
+        private System.Windows.Forms.Label lbl_frameInfo;
 
 
     }

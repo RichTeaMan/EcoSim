@@ -90,17 +90,19 @@ namespace EcoSim.UI
         public bool DrawMode = false;
 
         List<Point> CreaturesToDraw;
-        Graphics gfx;
         Bitmap buffer;
 
         public World World { get; private set; }
+
+        public long FramesDrawn { get; private set; }
+        public long FramesPainted { get; private set; }
 
         public WorldView()
         {
             InitializeComponent();
             CreaturesToDraw = new List<Point>();
+            DoubleBuffered = true;
 
-            gfx = this.CreateGraphics();
             BufferResize();
 
             if (!DesignMode)
@@ -189,9 +191,11 @@ namespace EcoSim.UI
                 int Y = YCoordinate;
                 int X = XCoordinate;
                 var bmpData = Draw.LockBuffer(buffer);
-                for (int j = 0; j < buffer.Height; j++)
+                int height = buffer.Height;
+                int width = buffer.Width;
+                for (int j = 0; j < height; j++)
                 {
-                    for (int i = 0; i < buffer.Width; i++)
+                    for (int i = 0; i < width; i++)
                     {
                         if (World.Index[X, Y].HasCreature)
                             CreaturesToDraw.Add(new Point(i, j));
@@ -220,10 +224,15 @@ namespace EcoSim.UI
                     Draw.Circle(bmpData, 4, p.X, p.Y, Color.Purple);
                 }
                 buffer.UnlockBits(bmpData);
-                //gfx.DrawImageUnscaled(buffer, 0, 0);
-                //gfx.DrawImage(buffer, 0, 0, Width, Height);
-                gfx.DrawImage(buffer, destRect, sourceRect, GraphicsUnit.Pixel);
+                Invalidate();
+                FramesDrawn++;
             }
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            e.Graphics.DrawImage(buffer, destRect, sourceRect, GraphicsUnit.Pixel);
+            FramesPainted++;
         }
 
         Rectangle destRect;
@@ -231,7 +240,6 @@ namespace EcoSim.UI
 
         private void WorldView_Resize(object sender, EventArgs e)
         {
-            gfx = this.CreateGraphics();
             destRect = new Rectangle(0, 0, Width, Height);
             BufferResize();
         }

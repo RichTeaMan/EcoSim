@@ -34,6 +34,7 @@
             // 
             // RefreshTimer
             // 
+            this.RefreshTimer.Interval = 20;
             this.RefreshTimer.Tick += new System.EventHandler(this.RefreshTimer_Tick);
             // 
             // WorldView
