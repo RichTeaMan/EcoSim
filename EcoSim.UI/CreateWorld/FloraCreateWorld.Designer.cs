@@ -40,7 +40,7 @@
             this.tableLayoutPanel1.ColumnCount = 3;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 60.5042F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 39.4958F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 60F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 61F));
             this.tableLayoutPanel1.Controls.Add(this.label1, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.num_InitialCoverage, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -59,7 +59,7 @@
             this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(137, 30);
+            this.label1.Size = new System.Drawing.Size(136, 30);
             this.label1.TabIndex = 0;
             this.label1.Text = "Initial Coverage(%)";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -67,22 +67,22 @@
             // num_InitialCoverage
             // 
             this.num_InitialCoverage.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.num_InitialCoverage.Location = new System.Drawing.Point(146, 7);
+            this.num_InitialCoverage.Location = new System.Drawing.Point(145, 7);
             this.num_InitialCoverage.Name = "num_InitialCoverage";
             this.num_InitialCoverage.Size = new System.Drawing.Size(87, 20);
             this.num_InitialCoverage.TabIndex = 2;
             this.num_InitialCoverage.Value = new decimal(new int[] {
-            80,
+            20,
             0,
             0,
             0});
             // 
-            // CreaturesCreateWorld
+            // FloraCreateWorld
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "CreaturesCreateWorld";
+            this.Name = "FloraCreateWorld";
             this.Size = new System.Drawing.Size(297, 309);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
