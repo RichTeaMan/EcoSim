@@ -10,7 +10,7 @@ namespace EcoSim.Logic
         private static int MinimumRegrowth = 100;
         private static int MaximumRegrowth = 1000;
 
-        private World world;
+        public World World { get; private set; }
 
         public int XCoord { get; private set; }
 
@@ -20,27 +20,24 @@ namespace EcoSim.Logic
 
         public uint GrowthTime = 0;
 
-        public Flora(World world)
+        public Flora(World world, int x, int y)
         {
-            this.world = world;
-            while (true)
+            World = world;
+            if (world[x, y].Flora == null)
             {
-                XCoord = world.GetRandomWidth();
-                YCoord = world.GetRandomHeight();
-                if (world.Index[XCoord, YCoord].Flora == null)
-                {
-                    world.Index[XCoord, YCoord].Flora = this;
-                    break;
-                }
+                world[x, y].Flora = this;
             }
-
+            else
+            {
+                throw new Exception("Flora already exists at this location.");
+            }
         }
 
         public int Eat()
         {
-            if (GrowthTime < world.Tick)
+            if (GrowthTime < World.Tick)
             {
-                GrowthTime = world.Tick + (uint)RandNum.Integer(MinimumRegrowth, MaximumRegrowth);
+                GrowthTime = World.Tick + (uint)RandNum.Integer(MinimumRegrowth, MaximumRegrowth);
                 return EnergyValue;
             }
             return 0;
