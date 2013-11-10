@@ -8,7 +8,7 @@ namespace EcoSim.Logic
 {
     public class World
     {
-        public Position[,] Index;
+        private Position[] Index;
 
         public Creature[] Creatures;
 
@@ -35,22 +35,24 @@ namespace EcoSim.Logic
             this.Width = Width;
             this.WorldWrap = WorldWrap;
 
-            Index = new Position[Width, Height];
+            Index = new Position[Width * Height];
             for (int i = 0; i < Width; i++)
             {
                 for (int j = 0; j < Height; j++)
                 {
-                    Index[i, j] = new Position(this);
+                    Index[i + (Height * j)] = new Position(this, i, j);
                 }
             }
 
             worldFormer = new WorldFormer();
             worldFormer.InitialGeneration(this, 20, 0.5, 0, 5);
+
+            // for debugging
             int x = 0;
-            foreach(Position p in Index)
+            foreach (var p in Index)
             {
                 if (!p.Initialised)
-                { x++; }
+                    { x++; }
             }
         }
 
@@ -79,12 +81,13 @@ namespace EcoSim.Logic
             }
             else
             {
-                int cov = Width * Height * Coverage;
-                Flora = new Flora[cov / 100];
-                for (int i = 0; i < FloraCount; i++)
+                var flora = new List<Flora>();
+                foreach (var pos in Index)
                 {
-                    Flora[i] = new Flora(this);
+                    if (pos.Altitude > 0 && RandNum.Integer(100) < Coverage)
+                        flora.Add(new Flora(this, pos.X, pos.Y));
                 }
+                Flora = flora.ToArray();
             }
         }
 
@@ -126,14 +129,56 @@ namespace EcoSim.Logic
             return YCoord;
         }
 
+        /// <summary>
+        /// Gets the position with the given coordinates. Will wrap if the position is out of bounds.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public Position this[int x, int y]
+        {
+            get
+            {
+                return GetPosition(x, y);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
         public Position GetPosition(System.Drawing.Point point)
         {
             return GetPosition(point.X, point.Y);
         }
 
+        /// <summary>
+        /// Gets the position with the given coordinates. Will world wrap if the position is out of bounds.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public Position GetPosition(int x, int y)
         {
-            return Index[CheckXCoord(x), CheckYCoord(y)];
+            return Index[CheckXCoord(x) + (CheckYCoord(y) * Height)];
+            
+        }
+
+        /// <summary>
+        /// Gets the position with the given coordinates. This code is unsafe, will not world wrap and will
+        /// crash if non existant coordinates are given. This method has much higher performance than the
+        /// other get position methods.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public Position GetUnsafePosition(int x, int y)
+        {
+            unsafe
+            {
+                return Index[x + ((y) * Height)];
+            }
         }
 
         public int GetRandomWidth()

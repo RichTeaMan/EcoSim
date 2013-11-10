@@ -25,8 +25,6 @@ namespace EcoSim.Logic
             public Position parentPositon;
         }
 
-        private static WaitCallback callBack = new WaitCallback(ProcessSeed);
-
         private double HighAltitudeProbability;
         int WorldSizePixels;
         int PixelsCompleted = 0;
@@ -40,27 +38,25 @@ namespace EcoSim.Logic
                 int y = world.GetRandomHeight();
                 int x = world.GetRandomWidth();
 
-                if (Monitor.TryEnter(world.Index[x, y]))
+                if (Monitor.TryEnter(world[x, y]))
                 {
-                    if (!world.Index[x, y].Initialised)
+                    if (!world[x, y].Initialised)
                     {
-                        world.Index[x, y].Altitude = 0;// (short)world.random.Next(-100, 101);
-                        world.Index[x, y].Initialised = true;
+                        world[x, y].Altitude = 0;// (short)world.random.Next(-100, 101);
+                        world[x, y].Initialised = true;
                         WorldSeed worldSeed = new WorldSeed(world, this, new Point(x, y), world.GetPosition(x, y));
-                        
-                        ThreadPool.QueueUserWorkItem(WorldFormer.callBack, worldSeed);
+
+                        ThreadPool.QueueUserWorkItem(ProcessSeed, worldSeed);
                         Interlocked.Increment(ref WorkingThreads);
                         Interlocked.Increment(ref PixelsCompleted);
                     }
-                    Monitor.Exit(world.Index[x, y]);
+                    Monitor.Exit(world[x, y]);
                 }
                 else
                     Seeds--;
             }
             while (WorkingThreads > 0)
-                if (WorkingThreads < 20)
-                    Thread.Sleep(1);
-            Thread.Sleep(5);
+                Thread.Sleep(5);
             return;
         }
 
@@ -69,9 +65,9 @@ namespace EcoSim.Logic
         static void ProcessSeed(object WorldSeed)
         {
             WorldSeed worldSeed = (WorldSeed)WorldSeed;
-            if (worldSeed.worldFormer.WorkingThreads > 20 && RandNum.Double() > 0.1)
+            if (RandNum.Double() > 0.1)
             {
-                ThreadPool.QueueUserWorkItem(callBack, WorldSeed);
+                ThreadPool.QueueUserWorkItem(ProcessSeed, WorldSeed);
                 return;
             }
 
@@ -147,7 +143,7 @@ namespace EcoSim.Logic
                         WorldSeed NewWorldSeed = new WorldFormer.WorldSeed(worldSeed.world, worldSeed.worldFormer, p2, Pos2);
 
                         Interlocked.Increment(ref worldSeed.worldFormer.WorkingThreads);
-                        ThreadPool.QueueUserWorkItem(callBack, NewWorldSeed);
+                        ThreadPool.QueueUserWorkItem(ProcessSeed, NewWorldSeed);
 
 
                     }

@@ -33,6 +33,10 @@ namespace EcoSim.Logic
             }
         }
 
+        public int X { get; private set; }
+
+        public int Y { get; private set; }
+
         internal bool Initialised = false;
 
         public bool HasCreature
@@ -54,10 +58,12 @@ namespace EcoSim.Logic
             get { return HasFlora && Flora.GrowthTime < World.Tick; }
         }
 
-        public Position(World world)
+        public Position(World world, int x, int y)
         {
             World = world;
             Altitude = 0;
+            X = x;
+            Y = y;
         }
 
         public void RemoveCreature()

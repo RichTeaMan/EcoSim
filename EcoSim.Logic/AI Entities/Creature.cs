@@ -43,10 +43,10 @@ namespace EcoSim.Logic.AI_Entities
 
         private void Move(int XVector, int YVector)
         {
-            World.Index[XCoord, YCoord].RemoveCreature();
+            World[XCoord, YCoord].RemoveCreature();
             XCoord = World.CheckXCoord(XCoord + XVector);
             YCoord = World.CheckYCoord(YCoord + YVector);
-            World.Index[XCoord, YCoord].Creature = this;
+            World[XCoord, YCoord].Creature = this;
         }
     }
 }
