@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using EcoSim.Logic;
+using System.Drawing.Imaging;
 
 namespace EcoSim.UI
 {
@@ -146,7 +147,7 @@ namespace EcoSim.UI
             DrawFunc();
         }
 
-        private Color[] GroundColors;
+        private int[] GroundColors;
         private int LowestAltitude;
         private int HighestAltitude;
 
@@ -156,7 +157,7 @@ namespace EcoSim.UI
             this.HighestAltitude = Highest;
 
             int Levels = Highest - Lowest;
-            GroundColors = new Color[Levels];
+            GroundColors = new int[Levels];
 
             double RedStep = DarkestColor.R - LightestColor.R;
             RedStep /= Levels;
@@ -172,11 +173,11 @@ namespace EcoSim.UI
                 GroundColors[i] = Color.FromArgb(
                     Convert.ToInt32(LightestColor.R + i * RedStep),
                     Convert.ToInt32(LightestColor.G + i * GreenStep),
-                    Convert.ToInt32(LightestColor.B + i * BlueStep));
+                    Convert.ToInt32(LightestColor.B + i * BlueStep)).ToArgb();
             }
         }
 
-        private Color GetGroundColor(int Altitude)
+        private int GetGroundColor(int Altitude)
         {
             int a = -LowestAltitude + Altitude;
             return GroundColors[a];
@@ -188,37 +189,65 @@ namespace EcoSim.UI
             {
                 CreaturesToDraw.Clear();
 
-                int Y = YCoordinate;
-                int X = XCoordinate;
                 var bmpData = Draw.LockBuffer(buffer);
                 int height = buffer.Height;
                 int width = buffer.Width;
-                for (int j = 0; j < height; j++)
+
+
+                // pixels are drawn in 2 distinct phases, before and after the boundary.
+                // by calculating the world wrap boundary ahead of time more efficient data
+                // retrieval can be achieved.
+                int remainingHeight = 0;
+                int preBoundaryHeight = height + YCoordinate;
+                if (preBoundaryHeight > World.Height)
                 {
-                    for (int i = 0; i < width; i++)
-                    {
-                        if (World.Index[X, Y].HasCreature)
-                            CreaturesToDraw.Add(new Point(i, j));
-                        //
-                        //else
-                        //if (World.Index[X, Y].Marked)
-                        //    Draw.Pixel(bmpData, i, j, Color.Red);
-                        else if (World.Index[X, Y].Altitude < 0)
-                            Draw.Pixel(bmpData, i, j, WaterColor);
-                        else if (World.Index[X, Y].HasAliveFlora)
-                            Draw.Pixel(bmpData, i, j, Color.LawnGreen);
-                        //Draw.Pixel(bmpData, i, j, Draw.GetBlendedColor(GetGroundColor(Interface.Position.Index[X, Y].Altitude), WaterColor));
-                        else
-                            Draw.Pixel(bmpData, i, j, GetGroundColor(World.Index[X, Y].Altitude));
-                        X++;
-                        if (X >= World.Width)
-                            X -= World.Width;
-                    }
-                    Y++;
-                    if (Y >= World.Height)
-                        Y -= World.Height;
-                    X = XCoordinate;
+                    remainingHeight = preBoundaryHeight - World.Height;
+                    preBoundaryHeight = World.Height;
                 }
+
+                int remainingWidth = 0;
+                int preBoundaryWidth = width + XCoordinate;
+                if (preBoundaryWidth > World.Width)
+                {
+                    remainingWidth = preBoundaryWidth - World.Width;
+                    preBoundaryWidth = World.Width;
+                }
+
+                int pixelX = 0;
+                int pixelY = 0;
+
+                for (int j = YCoordinate; j < preBoundaryHeight; j++)
+                {
+                    for (int i = XCoordinate; i < preBoundaryWidth; i++)
+                    {
+                        DrawPixel(bmpData, i, j, pixelX, pixelY);
+                        pixelX++;
+                    }
+                    for (int i = 0; i < remainingWidth; i++)
+                    {
+                        DrawPixel(bmpData, i, j, pixelX, pixelY);
+                        pixelX++;
+                    }
+                    pixelX = 0;
+                    pixelY++;
+                }
+
+                for(int j = 0; j < remainingHeight; j++)
+                {
+                    for (int i = XCoordinate; i < preBoundaryWidth; i++)
+                    {
+                        DrawPixel(bmpData, i, j, pixelX, pixelY);
+                        pixelX++;
+                    }
+                    for(int i = 0; i < remainingWidth; i++)
+                    {
+                        DrawPixel(bmpData, i, j, pixelX, pixelY);
+                        pixelX++;
+                    }
+                    pixelX = 0;
+                    pixelY++;
+                }
+
                 foreach (Point p in CreaturesToDraw)
                 {
                     Draw.Circle(bmpData, 4, p.X, p.Y, Color.Purple);
@@ -227,6 +256,19 @@ namespace EcoSim.UI
                 Invalidate();
                 FramesDrawn++;
             }
+        }
+
+        private void DrawPixel(BitmapData bmpData, int x, int y, int pixelX, int pixelY)
+        {
+            var pos = World.GetUnsafePosition(x, y);
+            if (pos.HasCreature)
+                CreaturesToDraw.Add(new Point(pixelX, pixelY));
+            else if (pos.Altitude < 0)
+                Draw.Pixel(bmpData, pixelX, pixelY, WaterColor.ToArgb());
+            else if (pos.HasAliveFlora)
+                Draw.Pixel(bmpData, pixelX, pixelY, Color.LawnGreen.ToArgb());
+            else
+                Draw.Pixel(bmpData, pixelX, pixelY, GetGroundColor(pos.Altitude));
         }
 
         protected override void OnPaint(PaintEventArgs e)

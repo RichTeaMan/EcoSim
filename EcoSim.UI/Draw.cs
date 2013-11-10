@@ -47,10 +47,10 @@ namespace EcoSim.UI
             return bmpData;
         }
 
-        public static void Pixel(BitmapData bmpData, int X, int Y, Color Colour)
+        public static void Pixel(BitmapData bmpData, int X, int Y, int Colour)
         {
             IntPtr temp = FindPtr(bmpData, X, Y);
-            System.Runtime.InteropServices.Marshal.WriteInt32(temp, Colour.ToArgb());
+            System.Runtime.InteropServices.Marshal.WriteInt32(temp, Colour);
         }
 
         public static Color GetBlendedColor(Color OldColor, Color NewColor)
