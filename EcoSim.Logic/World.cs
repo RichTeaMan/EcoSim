@@ -152,6 +152,27 @@ namespace EcoSim.Logic
             return GetPosition(point.X, point.Y);
         }
 
+        public IList<Position> GetPositions(int x, int y, int width, int height)
+        {
+            int cX = CheckXCoord(x);
+            int cY = CheckYCoord(y);
+            var positions = new List<Position>();
+            foreach (var i in Enumerable.Range(cX, width))
+            {
+                int iX = i;
+                if (i >= Width)
+                    iX -= Width;
+                foreach (var j in Enumerable.Range(cY, height))
+                {
+                    int jY = j;
+                    if (j >= Height)
+                        jY -= Height;
+                    positions.Add(GetUnsafePosition(iX, jY));
+                }
+            }
+            return positions;
+        }
+
         /// <summary>
         /// Gets the position with the given coordinates. Will world wrap if the position is out of bounds.
         /// </summary>

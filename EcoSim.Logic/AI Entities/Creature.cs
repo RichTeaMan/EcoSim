@@ -26,14 +26,23 @@ namespace EcoSim.Logic.AI_Entities
             this.World = world;
         }
 
+        public IList<Position> GetPositions()
+        {
+            var positions = World.GetPositions(XCoord - 4, YCoord - 4, 8, 8);
+            return positions;
+        }
+
         public void Activate()
         {
+            bool inWater;
             do
             {
                 XCoord = World.GetRandomWidth();
                 YCoord = World.GetRandomHeight();
+                var positions = GetPositions();
+                inWater = positions.Any(p => p.HasWater);
             }
-            while (World[XCoord, YCoord].HasWater);
+            while (inWater);
 
             Active = true;
         }
@@ -53,11 +62,17 @@ namespace EcoSim.Logic.AI_Entities
                     yVector = RandNum.Integer(-1, 2);
                     decisionTicks = RandNum.Integer(10, 30);
                 }
-                var position = Move(xVector, yVector);
-                if (position.HasWater)
+                Move(xVector, yVector);
+                var positions = GetPositions();
+                var inWater = positions.Any(p => p.HasWater);
+                if (inWater)
                 {
                     xVector = -xVector;
                     yVector = -yVector;
+                }
+                foreach (var p in positions)
+                {
+                    p.EatFlora();
                 }
                 decisionTicks--;
             }
