@@ -60,6 +60,8 @@ namespace EcoSim.Logic
 
         public short WaterLevel { get; set; }
 
+        public bool HasWater { get { return Altitude < 0; } }
+
         public Position(World world, int x, int y)
         {
             World = world;

@@ -5,6 +5,7 @@ using System.Text;
 using EcoSim.Logic.AI_Entities;
 using System.Collections.Concurrent;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace EcoSim.Logic
 {
@@ -199,7 +200,11 @@ namespace EcoSim.Logic
 
         public void Process()
         {
-            ProcessManager.QueueCreatures(this);
+            
+            Parallel.ForEach(Creatures, c =>
+            {
+                c.Process();
+            });
 
             var positionProcess = Interlocked.Exchange<ConcurrentStack<Position>>(ref PositionProcess, new ConcurrentStack<Position>());
 
