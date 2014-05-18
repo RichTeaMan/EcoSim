@@ -58,6 +58,8 @@ namespace EcoSim.Logic
             get { return HasFlora && Flora.GrowthTime < World.Tick; }
         }
 
+        public short WaterLevel { get; set; }
+
         public Position(World world, int x, int y)
         {
             World = world;
@@ -82,6 +84,31 @@ namespace EcoSim.Logic
                 return Flora.Eat();
             }
             return 0;
+        }
+
+        public void ProcessWater()
+        {
+            
+        }
+
+        public Position GetNorthPosition()
+        {
+            return World[X, Y - 1];
+        }
+
+        public Position GetEastPosition()
+        {
+            return World[X + 1, Y];
+        }
+
+        public Position GetSouthPosition()
+        {
+            return World[X, Y + 1];
+        }
+
+        public Position GetWestPosition()
+        {
+            return World[X - 1, Y];
         }
     }
 }

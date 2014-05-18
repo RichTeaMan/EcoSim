@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EcoSim.Logic.AI_Entities;
+using System.Collections.Concurrent;
+using System.Threading;
 
 namespace EcoSim.Logic
 {
@@ -15,6 +17,8 @@ namespace EcoSim.Logic
         public Flora[] Flora;
 
         WorldFormer worldFormer;
+
+        private ConcurrentStack<Position> PositionProcess;
 
         public int FloraCount
         {
@@ -54,6 +58,8 @@ namespace EcoSim.Logic
                 if (!p.Initialised)
                     { x++; }
             }
+
+            PositionProcess = new ConcurrentStack<Position>();
         }
 
         public void InitialiseCreatures(int StartCreatures, int MaxCreatures)
@@ -194,7 +200,21 @@ namespace EcoSim.Logic
         public void Process()
         {
             ProcessManager.QueueCreatures(this);
+
+            var positionProcess = Interlocked.Exchange<ConcurrentStack<Position>>(ref PositionProcess, new ConcurrentStack<Position>());
+
+            Position pos;
+            while (positionProcess.TryPop(out pos))
+            {
+                pos.ProcessWater();
+            }
+
             Tick++;
+        }
+
+        public void AddToProcessQueue(Position position)
+        {
+            PositionProcess.Push(position);
         }
     }
 }

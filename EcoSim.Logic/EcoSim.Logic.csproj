@@ -71,6 +71,7 @@
     <Compile Include="Flora.cs" />
     <Compile Include="ProcessManager.cs" />
     <Compile Include="RandNum.cs" />
+    <Compile Include="WaterSource.cs" />
     <Compile Include="World.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
