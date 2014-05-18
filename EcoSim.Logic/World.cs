@@ -41,24 +41,16 @@ namespace EcoSim.Logic
             this.WorldWrap = WorldWrap;
 
             Index = new Position[Width * Height];
-            for (int i = 0; i < Width; i++)
+            Parallel.ForEach(Enumerable.Range(0, Width), i =>
             {
-                for (int j = 0; j < Height; j++)
+                Parallel.ForEach(Enumerable.Range(0, Height), j =>
                 {
                     Index[i + (Height * j)] = new Position(this, i, j);
-                }
-            }
+                });
+            });
 
             worldFormer = new WorldFormer();
             worldFormer.InitialGeneration(this, 20, 0.5, 0, 5);
-
-            // for debugging
-            int x = 0;
-            foreach (var p in Index)
-            {
-                if (!p.Initialised)
-                    { x++; }
-            }
 
             PositionProcess = new ConcurrentStack<Position>();
         }
