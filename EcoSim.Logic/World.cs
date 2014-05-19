@@ -11,11 +11,11 @@ namespace EcoSim.Logic
 {
     public class World
     {
-        private Position[] Index;
+        public Position[] Positions { get; private set; }
 
-        public Creature[] Creatures;
+        public Creature[] Creatures { get; private set; }
 
-        public Flora[] Flora;
+        public Flora[] Flora { get; private set; }
 
         RandomPointsWorldFormer worldFormer;
 
@@ -26,10 +26,10 @@ namespace EcoSim.Logic
             get { return Flora.Count(); }
         }
 
-        public readonly int Height;
-        public readonly int Width;
+        public int Height { get; private set; }
+        public int Width {get; private set; }
 
-        public bool WorldWrap;
+        public bool WorldWrap { get; private set; }
 
         public uint Tick { get; private set; }
 
@@ -40,17 +40,14 @@ namespace EcoSim.Logic
             this.Width = Width;
             this.WorldWrap = WorldWrap;
 
-            Index = new Position[Width * Height];
+            Positions = new Position[Width * Height];
             Parallel.ForEach(Enumerable.Range(0, Width), i =>
             {
                 Parallel.ForEach(Enumerable.Range(0, Height), j =>
                 {
-                    Index[i + (Height * j)] = new Position(this, i, j);
+                    Positions[i + (Height * j)] = new Position(this, i, j);
                 });
             });
-
-            worldFormer = new RandomPointsWorldFormer() { Seeds = 20, HighAltitudeProbability = 0.5, MinStep = 0, MaxStep = 5 };
-            worldFormer.Generate(this);
             
             PositionProcess = new ConcurrentStack<Position>();
         }
@@ -81,7 +78,7 @@ namespace EcoSim.Logic
             else
             {
                 var flora = new List<Flora>();
-                foreach (var pos in Index)
+                foreach (var pos in Positions)
                 {
                     if (pos.Altitude > 0 && RandNum.Integer(100) < Coverage)
                         flora.Add(new Flora(this, pos.X, pos.Y));
@@ -181,7 +178,7 @@ namespace EcoSim.Logic
         /// <returns></returns>
         public Position GetPosition(int x, int y)
         {
-            return Index[CheckXCoord(x) + (CheckYCoord(y) * Height)];
+            return Positions[CheckXCoord(x) + (CheckYCoord(y) * Height)];
             
         }
 
@@ -197,7 +194,7 @@ namespace EcoSim.Logic
         {
             unsafe
             {
-                return Index[x + ((y) * Height)];
+                return Positions[x + ((y) * Height)];
             }
         }
 
