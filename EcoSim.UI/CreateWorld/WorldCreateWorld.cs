@@ -51,6 +51,22 @@ namespace EcoSim.UI
             get { return chk_WorldWrap.Checked; }
         }
 
+        /// <summary>
+        /// Gets the currently selected IWorldFormer with the assigned parameters.
+        /// </summary>
+        /// <returns></returns>
+        public IWorldFormer WorldFormer
+        {
+            get
+            {
+                if (worldFormerList.SelectedItems.Count > 0)
+                {
+                    return worldFormerList.SelectedItems[0].Tag as IWorldFormer;
+                }
+                return null;
+            }
+        }
+
         private void CreateFormerOptions(IWorldFormer former)
         {
             var table = new TableLayoutPanel();
@@ -110,10 +126,11 @@ namespace EcoSim.UI
         {
             if (worldFormerList.SelectedItems.Count > 0)
             {
-                var worldFormer = worldFormerList.SelectedItems[0].Tag as IWorldFormer;
+                var worldFormer = WorldFormer;
                 if (worldFormer != null)
                     CreateFormerOptions(worldFormer);
             }
         }
+
     }
 }
