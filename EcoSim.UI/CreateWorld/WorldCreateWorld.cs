@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using EcoSim.Logic;
 
 namespace EcoSim.UI
 {
@@ -14,6 +15,23 @@ namespace EcoSim.UI
         public WorldCreateWorld()
         {
             InitializeComponent();
+            var iFormer = typeof(IWorldFormer);
+            var formers = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(a => a.GetTypes())
+                .Where(t => t.GetInterfaces().Contains(iFormer) && !t.IsInterface)
+                .ToArray();
+
+            foreach (var former in formers)
+            {
+                try
+                {
+                    var formerInstance = (IWorldFormer)former.GetConstructor(Type.EmptyTypes).Invoke(null);
+                    var listItem = new ListViewItem(former.Name) { Tag = formerInstance };
+                    worldFormerList.Items.Add(listItem);
+                }
+                catch // should log this. TODO.
+                { }
+            }
         }
 
         public int WorldWidth
@@ -29,6 +47,62 @@ namespace EcoSim.UI
         public bool WorldWrap
         {
             get { return chk_WorldWrap.Checked; }
+        }
+
+        private void CreateFormerOptions(IWorldFormer former)
+        {
+            Panel p = new Panel();
+            var table = new TableLayoutPanel();
+            table.Dock = DockStyle.Fill;
+            table.Location = new Point(0, 0);
+
+            int rowCount = 0;
+            foreach (var prop in former.GetType().GetProperties())
+            {
+                Control valueCtrl = null;
+                if (prop.PropertyType == typeof(int))
+                {
+                    NumericUpDown num = new NumericUpDown();
+                    num.DecimalPlaces = 0;
+                    num.DataBindings.Add("Value", former, prop.Name);
+                    valueCtrl = num;
+                }
+                else if (prop.PropertyType == typeof(double))
+                {
+                    NumericUpDown num = new NumericUpDown();
+                    num.DecimalPlaces = 2;
+                    num.DataBindings.Add("Value", former, prop.Name);
+                    valueCtrl = num;
+                }
+                else if (prop.PropertyType == typeof(string))
+                {
+                    TextBox tb = new TextBox();
+                    tb.DataBindings.Add("Text", former, prop.Name);
+                    valueCtrl = tb;
+                }
+                if (valueCtrl != null)
+                {
+                    table.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+                    var lbl = new Label();
+                    lbl.Text = prop.Name;
+                    table.Controls.Add(lbl, 0, rowCount);
+                    lbl.Location = new Point(0, 0);
+                    table.Controls.Add(valueCtrl, 1, rowCount);
+                    valueCtrl.Location = new Point(0, 0);
+                    rowCount++;
+                }
+            }
+            formerOptions.Controls.Clear();
+            formerOptions.Controls.Add(table);
+            table.Dock = DockStyle.Fill;
+            table.Location = new Point(0, 0);
+        }
+
+        private void worldFormerList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var worldFormer = worldFormerList.SelectedItems[0].Tag as IWorldFormer;
+            if (worldFormer != null)
+                CreateFormerOptions(worldFormer);
         }
     }
 }
