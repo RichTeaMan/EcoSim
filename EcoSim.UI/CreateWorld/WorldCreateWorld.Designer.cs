@@ -224,6 +224,7 @@
             // 
             this.worldFormerList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.worldFormerList.Location = new System.Drawing.Point(3, 3);
+            this.worldFormerList.MultiSelect = false;
             this.worldFormerList.Name = "worldFormerList";
             this.worldFormerList.Size = new System.Drawing.Size(144, 242);
             this.worldFormerList.TabIndex = 0;
@@ -233,6 +234,7 @@
             // 
             // formerOptions
             // 
+            this.formerOptions.AutoScroll = true;
             this.formerOptions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.formerOptions.Location = new System.Drawing.Point(153, 3);
             this.formerOptions.Name = "formerOptions";

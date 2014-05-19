@@ -32,6 +32,8 @@ namespace EcoSim.UI
                 catch // should log this. TODO.
                 { }
             }
+
+            worldFormerList.Items[0].Selected = true;
         }
 
         public int WorldWidth
@@ -51,16 +53,21 @@ namespace EcoSim.UI
 
         private void CreateFormerOptions(IWorldFormer former)
         {
-            Panel p = new Panel();
             var table = new TableLayoutPanel();
             table.Dock = DockStyle.Fill;
             table.Location = new Point(0, 0);
 
-            int rowCount = 0;
-            foreach (var prop in former.GetType().GetProperties())
+            Label lbl_Summary = new Label();
+            lbl_Summary.Text = former.Summary;
+            lbl_Summary.Dock = DockStyle.Fill;
+            table.Controls.Add(lbl_Summary, 0, 0);
+            table.SetColumnSpan(lbl_Summary, 2);
+
+            int rowCount = 1;
+            foreach (var prop in former.GetType().GetProperties().Where(p => p.Name != "Summary"))
             {
                 Control valueCtrl = null;
-                if (prop.PropertyType == typeof(int))
+                if (prop.PropertyType == typeof(int) || prop.PropertyType == typeof(short))
                 {
                     NumericUpDown num = new NumericUpDown();
                     num.DecimalPlaces = 0;
@@ -82,6 +89,7 @@ namespace EcoSim.UI
                 }
                 if (valueCtrl != null)
                 {
+                    valueCtrl.Enabled = prop.CanWrite;
                     table.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
                     var lbl = new Label();
                     lbl.Text = prop.Name;
@@ -100,9 +108,12 @@ namespace EcoSim.UI
 
         private void worldFormerList_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var worldFormer = worldFormerList.SelectedItems[0].Tag as IWorldFormer;
-            if (worldFormer != null)
-                CreateFormerOptions(worldFormer);
+            if (worldFormerList.SelectedItems.Count > 0)
+            {
+                var worldFormer = worldFormerList.SelectedItems[0].Tag as IWorldFormer;
+                if (worldFormer != null)
+                    CreateFormerOptions(worldFormer);
+            }
         }
     }
 }
