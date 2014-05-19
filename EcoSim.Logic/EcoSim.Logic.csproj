@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="AI Entities\Creature.cs" />
     <Compile Include="Flora.cs" />
+    <Compile Include="IWorldFormer.cs" />
     <Compile Include="RandNum.cs" />
     <Compile Include="WaterSource.cs" />
     <Compile Include="World.cs" />

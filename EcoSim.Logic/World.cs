@@ -17,7 +17,7 @@ namespace EcoSim.Logic
 
         public Flora[] Flora;
 
-        WorldFormer worldFormer;
+        RandomPointsWorldFormer worldFormer;
 
         private ConcurrentStack<Position> PositionProcess;
 
@@ -49,9 +49,9 @@ namespace EcoSim.Logic
                 });
             });
 
-            worldFormer = new WorldFormer();
-            worldFormer.InitialGeneration(this, 20, 0.5, 0, 5);
-
+            worldFormer = new RandomPointsWorldFormer() { Seeds = 20, HighAltitudeProbability = 0.5, MinStep = 0, MaxStep = 5 };
+            worldFormer.Generate(this);
+            
             PositionProcess = new ConcurrentStack<Position>();
         }
 

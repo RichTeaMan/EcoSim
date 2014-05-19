@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("EcoSim.UI")]
-[assembly: AssemblyCopyright("Copyright © TomCo  2011")]
+[assembly: AssemblyCopyright("Copyright © TomCo  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -7,11 +7,11 @@ using System.Threading;
 
 namespace EcoSim.Logic
 {
-    public class WorldFormer
+    public class RandomPointsWorldFormer : IWorldFormer
     {
-        class WorldSeed
+        class RandomPointsWorldSeed
         {
-            public WorldSeed(World world, WorldFormer worldFormer, Point point, Position parentPosition)
+            public RandomPointsWorldSeed(World world, RandomPointsWorldFormer worldFormer, Point point, Position parentPosition)
             {
                 this.world = world;
                 this.worldFormer = worldFormer;
@@ -20,18 +20,24 @@ namespace EcoSim.Logic
             }
 
             public World world;
-            public WorldFormer worldFormer;
+            public RandomPointsWorldFormer worldFormer;
             public Point point;
             public Position parentPositon;
         }
 
-        private double HighAltitudeProbability;
         int WorldSizePixels;
         int PixelsCompleted = 0;
         int WorkingThreads = 0;
-        public void InitialGeneration(World world, int Seeds, double HighAltitudeProbabilty, int MinStep, int MaxStep)
+
+        public int Seeds { get; set; }
+        public double HighAltitudeProbability { get; set; }
+        public int MinStep { get; set; }
+        public int MaxStep { get; set; }
+
+        public string Summary { get { return "Creates a world getting random coordinates and then making random steps in altitude from each of those points."; } }
+
+        public void Generate(World world)
         {
-            this.HighAltitudeProbability = HighAltitudeProbabilty;
             WorldSizePixels = world.Width * world.Height;
             for (int i = 0; i < Seeds; i++)
             {
@@ -44,7 +50,7 @@ namespace EcoSim.Logic
                     {
                         world[x, y].Altitude = 0;// (short)world.random.Next(-100, 101);
                         world[x, y].Initialised = true;
-                        WorldSeed worldSeed = new WorldSeed(world, this, new Point(x, y), world.GetPosition(x, y));
+                        RandomPointsWorldSeed worldSeed = new RandomPointsWorldSeed(world, this, new Point(x, y), world.GetPosition(x, y));
 
                         ThreadPool.QueueUserWorkItem(ProcessSeed, worldSeed);
                         Interlocked.Increment(ref WorkingThreads);
@@ -59,12 +65,10 @@ namespace EcoSim.Logic
                 Thread.Sleep(5);
             return;
         }
-
-        private static object _lock;
-
+        
         static void ProcessSeed(object WorldSeed)
         {
-            WorldSeed worldSeed = (WorldSeed)WorldSeed;
+            RandomPointsWorldSeed worldSeed = (RandomPointsWorldSeed)WorldSeed;
             if (RandNum.Double() > 0.1)
             {
                 ThreadPool.QueueUserWorkItem(ProcessSeed, WorldSeed);
@@ -140,12 +144,10 @@ namespace EcoSim.Logic
 
                         Interlocked.Increment(ref worldSeed.worldFormer.PixelsCompleted);
 
-                        WorldSeed NewWorldSeed = new WorldFormer.WorldSeed(worldSeed.world, worldSeed.worldFormer, p2, Pos2);
+                        RandomPointsWorldSeed NewWorldSeed = new RandomPointsWorldFormer.RandomPointsWorldSeed(worldSeed.world, worldSeed.worldFormer, p2, Pos2);
 
                         Interlocked.Increment(ref worldSeed.worldFormer.WorkingThreads);
                         ThreadPool.QueueUserWorkItem(ProcessSeed, NewWorldSeed);
-
-
                     }
                     Monitor.Exit(Pos2);
                 }
