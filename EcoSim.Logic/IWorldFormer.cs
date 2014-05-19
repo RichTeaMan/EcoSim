@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EcoSim.Logic
 {
-    interface IWorldFormer
+    public interface IWorldFormer
     {
         void Generate(World world);
 
