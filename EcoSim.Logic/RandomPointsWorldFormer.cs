@@ -13,16 +13,16 @@ namespace EcoSim.Logic
         {
             public RandomPointsWorldSeed(World world, RandomPointsWorldFormer worldFormer, Point point, Position parentPosition)
             {
-                this.world = world;
-                this.worldFormer = worldFormer;
-                this.point = point;
-                this.parentPositon = parentPosition;
+                World = world;
+                WorldFormer = worldFormer;
+                Point = point;
+                ParentPositon = parentPosition;
             }
 
-            public World world;
-            public RandomPointsWorldFormer worldFormer;
-            public Point point;
-            public Position parentPositon;
+            public World World { get; protected set; }
+            public RandomPointsWorldFormer WorldFormer { get; protected set; }
+            public Point Point { get; protected set; }
+            public Position ParentPositon { get; protected set; }
         }
 
         int WorldSizePixels;
@@ -33,6 +33,14 @@ namespace EcoSim.Logic
         public double HighAltitudeProbability { get; set; }
         public int MinStep { get; set; }
         public int MaxStep { get; set; }
+
+        public RandomPointsWorldFormer()
+        {
+            MinStep = 1;
+            MaxStep = 10;
+            Seeds = 20;
+            HighAltitudeProbability = 0.2;
+        }
 
         public string Summary { get { return "Creates a world getting random coordinates and then making random steps in altitude from each of those points."; } }
 
@@ -75,9 +83,9 @@ namespace EcoSim.Logic
                 return;
             }
 
-            Point p = worldSeed.point;
+            Point p = worldSeed.Point;
 
-            Position Pos = worldSeed.parentPositon; //worldSeed.world.GetPosition(p);
+            Position Pos = worldSeed.ParentPositon; //worldSeed.world.GetPosition(p);
             for (int i = 0; i < 8; i++)
             {
                 Point p2 = new Point(p.X, p.Y);
@@ -120,8 +128,8 @@ namespace EcoSim.Logic
                         break;
                 }
 
-                p2 = new Point(worldSeed.world.CheckXCoord(p2.X), worldSeed.world.CheckYCoord(p2.Y));
-                Position Pos2 = worldSeed.world.GetPosition(p2);
+                p2 = new Point(worldSeed.World.CheckXCoord(p2.X), worldSeed.World.CheckYCoord(p2.Y));
+                Position Pos2 = worldSeed.World.GetPosition(p2);
 
                 if (Monitor.TryEnter(Pos2))
                 {
@@ -136,23 +144,23 @@ namespace EcoSim.Logic
                         }
                         else
                         {
-                            if (RandNum.Double() > worldSeed.worldFormer.HighAltitudeProbability)
+                            if (RandNum.Double() > worldSeed.WorldFormer.HighAltitudeProbability)
                                 Pos2.Altitude = (short)(Pos.Altitude + Step);
                             else
                                 Pos2.Altitude = (short)(Pos.Altitude - Step);
                         }
 
-                        Interlocked.Increment(ref worldSeed.worldFormer.PixelsCompleted);
+                        Interlocked.Increment(ref worldSeed.WorldFormer.PixelsCompleted);
 
-                        RandomPointsWorldSeed NewWorldSeed = new RandomPointsWorldFormer.RandomPointsWorldSeed(worldSeed.world, worldSeed.worldFormer, p2, Pos2);
+                        RandomPointsWorldSeed NewWorldSeed = new RandomPointsWorldFormer.RandomPointsWorldSeed(worldSeed.World, worldSeed.WorldFormer, p2, Pos2);
 
-                        Interlocked.Increment(ref worldSeed.worldFormer.WorkingThreads);
+                        Interlocked.Increment(ref worldSeed.WorldFormer.WorkingThreads);
                         ThreadPool.QueueUserWorkItem(ProcessSeed, NewWorldSeed);
                     }
                     Monitor.Exit(Pos2);
                 }
             }
-            Interlocked.Decrement(ref worldSeed.worldFormer.WorkingThreads);
+            Interlocked.Decrement(ref worldSeed.WorldFormer.WorkingThreads);
         }
 
 
