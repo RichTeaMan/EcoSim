@@ -36,9 +36,11 @@
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.WorldView = new EcoSim.UI.WorldView();
             this.lblAltitude = new System.Windows.Forms.Label();
-            this.lbl_frameInfo = new System.Windows.Forms.Label();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.lbl_Status = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
@@ -109,21 +111,28 @@
             this.lblAltitude.TabIndex = 2;
             this.lblAltitude.Text = "Altitude";
             // 
-            // lbl_frameInfo
+            // statusStrip1
             // 
-            this.lbl_frameInfo.AutoSize = true;
-            this.lbl_frameInfo.Location = new System.Drawing.Point(645, 0);
-            this.lbl_frameInfo.Name = "lbl_frameInfo";
-            this.lbl_frameInfo.Size = new System.Drawing.Size(19, 13);
-            this.lbl_frameInfo.TabIndex = 3;
-            this.lbl_frameInfo.Text = "----";
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lbl_Status});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 449);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(760, 22);
+            this.statusStrip1.TabIndex = 4;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // lbl_Status
+            // 
+            this.lbl_Status.Name = "lbl_Status";
+            this.lbl_Status.Size = new System.Drawing.Size(57, 17);
+            this.lbl_Status.Text = "lbl_Status";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(760, 471);
-            this.Controls.Add(this.lbl_frameInfo);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
@@ -133,6 +142,8 @@
             this.menuStrip1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -147,9 +158,8 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private WorldView WorldView;
         private System.Windows.Forms.Label lblAltitude;
-        private System.Windows.Forms.Label lbl_frameInfo;
-
-
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel lbl_Status;
     }
 }
 

@@ -86,9 +86,9 @@ namespace EcoSim.UI
         #endregion
 
         /// <summary>
-        /// Gets or sets if the control is drawing.
+        /// Gets if the control is drawing.
         /// </summary>
-        public bool DrawMode = false;
+        public bool DrawMode { get; protected set; }
 
         List<Point> CreaturesToDraw;
         Bitmap buffer;

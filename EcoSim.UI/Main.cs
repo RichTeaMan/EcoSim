@@ -57,7 +57,7 @@ namespace EcoSim.UI
             
             lblAltitude.Text += Environment.NewLine + String.Format("Coordinates: {0}, {1}", WorldView.XCoordinate, WorldView.YCoordinate);
 
-            lbl_frameInfo.Text = string.Format("Frames Drawn: {0} Frames Painted: {1}", WorldView.FramesDrawn, WorldView.FramesPainted);
+            lbl_Status.Text = string.Format("Frames Drawn: {0} Frames Painted: {1} World Tick: {2}", WorldView.FramesDrawn, WorldView.FramesPainted, WorldView.World.Tick);
         }
 
         private void WorldView_MouseMove(object sender, MouseEventArgs e)

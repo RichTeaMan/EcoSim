@@ -24,6 +24,10 @@ namespace EcoSim.UI
         private void but_OK_Click(object sender, EventArgs e)
         {
             var newWorld = new World(worldCtrl.WorldWidth, worldCtrl.WorldHeight, worldCtrl.WorldWrap);
+
+            var former = worldCtrl.WorldFormer;
+            former.Generate(newWorld);
+
             newWorld.InitialiseFlora(floraCtrl.InitialCoverage);
             newWorld.InitialiseCreatures(creaturesCtrl.StartPopulation, creaturesCtrl.MaxPopulation);
 
