@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace EcoSim.UI
@@ -40,6 +41,7 @@ namespace EcoSim.UI
                 {
                     WorldTimer.Start();
                     WorldView.BeginDraw(createWorld.CreatedWorld);
+                    logicWorker.RunWorkerAsync();
                 }
             }
         }
@@ -47,8 +49,6 @@ namespace EcoSim.UI
 
         private void WorldTimer_Tick(object sender, EventArgs e)
         {
-            WorldView.World.Process();
-            
             var Position = WorldView.GetPositionAtMouseLocation();
             if (Position != null)
                 lblAltitude.Text = String.Format("Altitude: {0}", Position.Altitude);
@@ -68,6 +68,20 @@ namespace EcoSim.UI
         private void WorldView_MouseClick(object sender, MouseEventArgs e)
         {
             
+        }
+
+        private async void logicWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+            while (!logicWorker.CancellationPending)
+            {
+                WorldView.World.Process();
+                await Task.Delay(100);
+            }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            logicWorker.CancelAsync();
         }
     }
 }
