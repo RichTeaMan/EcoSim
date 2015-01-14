@@ -151,24 +151,24 @@ namespace EcoSim.UI
         private int LowestAltitude;
         private int HighestAltitude;
 
-        private void SetGroundColors(Color DarkestColor, Color LightestColor, int Lowest, int Highest)
+        private void SetGroundColors(Color DarkestColor, Color LightestColor, int lowest, int highest)
         {
-            this.LowestAltitude = Lowest;
-            this.HighestAltitude = Highest;
+            LowestAltitude = lowest;
+            HighestAltitude = highest;
 
-            int Levels = Highest - Lowest;
-            GroundColors = new int[Levels];
+            int levels = (highest - lowest) + 1;
+            GroundColors = new int[levels];
 
             double RedStep = DarkestColor.R - LightestColor.R;
-            RedStep /= Levels;
+            RedStep /= levels;
 
             double GreenStep = DarkestColor.G - LightestColor.G;
-            GreenStep /= Levels;
+            GreenStep /= levels;
 
             double BlueStep = DarkestColor.B - LightestColor.B;
-            BlueStep /= Levels;
+            BlueStep /= levels;
 
-            for (int i = 0; i < Levels; i++)
+            for (int i = 0; i < levels; i++)
             {
                 GroundColors[i] = Color.FromArgb(
                     Convert.ToInt32(LightestColor.R + i * RedStep),
@@ -177,9 +177,9 @@ namespace EcoSim.UI
             }
         }
 
-        private int GetGroundColor(int Altitude)
+        private int GetGroundColor(int altitude)
         {
-            int a = -LowestAltitude + Altitude;
+            int a = altitude - LowestAltitude;
             return GroundColors[a];
         }
 
