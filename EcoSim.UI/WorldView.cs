@@ -307,7 +307,14 @@ namespace EcoSim.UI
         {
             if (World == null)
                 return null;
-            return World.GetPosition(XCoordinate + MouseX, YCoordinate + MouseY);
+
+            var mouseXScale = MouseX * ViewScale;
+            var mouseYScale = MouseY * ViewScale;
+
+            var xScale = XCoordinate + (int)Math.Floor(mouseXScale);
+            var yScale = YCoordinate + (int)Math.Floor(mouseYScale);
+
+            return World.GetPosition(xScale, yScale);
         }
 
         private bool UpKey = false;
