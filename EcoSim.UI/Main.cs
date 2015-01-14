@@ -49,13 +49,22 @@ namespace EcoSim.UI
 
         private void WorldTimer_Tick(object sender, EventArgs e)
         {
-            var Position = WorldView.GetPositionAtMouseLocation();
-            if (Position != null)
-                lblAltitude.Text = String.Format("Altitude: {0}", Position.Altitude);
+            var position = WorldView.GetPositionAtMouseLocation();
+            if (position != null)
+            {
+                var lines = new List<string>();
+                lines.Add(string.Format("X: {0} Y: {1}", position.X, position.Y));
+                lines.Add(string.Format("Altitude: {0}", position.Altitude));
+                lines.Add(string.Format("Creature: {0}", position.Creature != null));
+                lines.Add(string.Format("Has Water: {0}", position.HasWater));
+                lines.Add(string.Format("Water Level: {0}", position.WaterLevel));
+
+                infoBox.Lines = lines.ToArray();
+            }
             else
-                lblAltitude.Text = "Altitude: NA";
-            
-            lblAltitude.Text += Environment.NewLine + String.Format("Coordinates: {0}, {1}", WorldView.XCoordinate, WorldView.YCoordinate);
+            {
+                infoBox.Text = "No position selected.";
+            }
 
             lbl_Status.Text = string.Format("Frames Drawn: {0} Frames Painted: {1} World Tick: {2}", WorldView.FramesDrawn, WorldView.FramesPainted, WorldView.World.Tick);
         }

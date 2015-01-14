@@ -34,11 +34,11 @@
             this.setupSimulationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.WorldTimer = new System.Windows.Forms.Timer(this.components);
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.lblAltitude = new System.Windows.Forms.Label();
+            this.WorldView = new EcoSim.UI.WorldView();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lbl_Status = new System.Windows.Forms.ToolStripStatusLabel();
-            this.WorldView = new EcoSim.UI.WorldView();
             this.logicWorker = new System.ComponentModel.BackgroundWorker();
+            this.infoBox = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -79,7 +79,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 79.47369F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.52632F));
             this.tableLayoutPanel1.Controls.Add(this.WorldView, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.lblAltitude, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.infoBox, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 24);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -88,14 +88,20 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(760, 447);
             this.tableLayoutPanel1.TabIndex = 2;
             // 
-            // lblAltitude
+            // WorldView
             // 
-            this.lblAltitude.AutoSize = true;
-            this.lblAltitude.Location = new System.Drawing.Point(606, 0);
-            this.lblAltitude.Name = "lblAltitude";
-            this.lblAltitude.Size = new System.Drawing.Size(42, 13);
-            this.lblAltitude.TabIndex = 2;
-            this.lblAltitude.Text = "Altitude";
+            this.WorldView.AllowNavigation = true;
+            this.WorldView.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.WorldView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.WorldView.Location = new System.Drawing.Point(3, 3);
+            this.WorldView.Name = "WorldView";
+            this.WorldView.Size = new System.Drawing.Size(597, 441);
+            this.WorldView.TabIndex = 1;
+            this.WorldView.ViewScale = 1D;
+            this.WorldView.XCoordinate = 0;
+            this.WorldView.YCoordinate = 0;
+            this.WorldView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.WorldView_MouseClick);
+            this.WorldView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.WorldView_MouseMove);
             // 
             // statusStrip1
             // 
@@ -113,25 +119,20 @@
             this.lbl_Status.Size = new System.Drawing.Size(57, 17);
             this.lbl_Status.Text = "lbl_Status";
             // 
-            // WorldView
-            // 
-            this.WorldView.AllowNavigation = true;
-            this.WorldView.BackColor = System.Drawing.SystemColors.ActiveCaption;
-            this.WorldView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.WorldView.Location = new System.Drawing.Point(3, 3);
-            this.WorldView.Name = "WorldView";
-            this.WorldView.Size = new System.Drawing.Size(597, 441);
-            this.WorldView.TabIndex = 1;
-            this.WorldView.ViewScale = 1D;
-            this.WorldView.XCoordinate = 0;
-            this.WorldView.YCoordinate = 0;
-            this.WorldView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.WorldView_MouseClick);
-            this.WorldView.MouseMove += new System.Windows.Forms.MouseEventHandler(this.WorldView_MouseMove);
-            // 
             // logicWorker
             // 
             this.logicWorker.WorkerSupportsCancellation = true;
             this.logicWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.logicWorker_DoWork);
+            // 
+            // infoBox
+            // 
+            this.infoBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.infoBox.Location = new System.Drawing.Point(606, 3);
+            this.infoBox.Multiline = true;
+            this.infoBox.Name = "infoBox";
+            this.infoBox.ReadOnly = true;
+            this.infoBox.Size = new System.Drawing.Size(151, 441);
+            this.infoBox.TabIndex = 2;
             // 
             // Form1
             // 
@@ -164,10 +165,10 @@
         private System.Windows.Forms.Timer WorldTimer;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private WorldView WorldView;
-        private System.Windows.Forms.Label lblAltitude;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel lbl_Status;
         private System.ComponentModel.BackgroundWorker logicWorker;
+        private System.Windows.Forms.TextBox infoBox;
     }
 }
 
