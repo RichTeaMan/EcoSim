@@ -13,11 +13,9 @@ namespace EcoSim.Logic
     {
         public Position[] Positions { get; private set; }
 
-        public Creature[] Creatures { get; private set; }
+        public IEntity[] Entities { get; private set; }
 
         public Flora[] Flora { get; private set; }
-
-        RandomPointsWorldFormer worldFormer;
 
         private ConcurrentStack<Position> PositionProcess;
 
@@ -33,45 +31,45 @@ namespace EcoSim.Logic
 
         public uint Tick { get; private set; }
 
-        public World(int Width, int Height, bool WorldWrap)
+        public World(int width, int height, bool worldWrap)
         {
             Tick = 1;
-            this.Height = Height;
-            this.Width = Width;
-            this.WorldWrap = WorldWrap;
+            this.Height = height;
+            this.Width = width;
+            this.WorldWrap = worldWrap;
 
-            Positions = new Position[Width * Height];
-            Parallel.ForEach(Enumerable.Range(0, Width), i =>
+            Positions = new Position[width * height];
+            Parallel.ForEach(Enumerable.Range(0, width), i =>
             {
-                Parallel.ForEach(Enumerable.Range(0, Height), j =>
+                Parallel.ForEach(Enumerable.Range(0, height), j =>
                 {
-                    Positions[i + (Height * j)] = new Position(this, i, j);
+                    Positions[i + (height * j)] = new Position(this, i, j);
                 });
             });
             
             PositionProcess = new ConcurrentStack<Position>();
         }
 
-        public void InitialiseCreatures(int StartCreatures, int MaxCreatures)
+        public void InitialiseCreatures(int startCreatures, int maxCreatures)
         {
-            if (MaxCreatures < StartCreatures)
+            if (maxCreatures < startCreatures)
                 throw new Exception("MaxCreatures must be greater than StartCreatures");
 
-            Creatures = new Creature[MaxCreatures];
-            for (int i = 0; i < MaxCreatures; i++)
+            Entities = new IEntity[maxCreatures];
+            for (int i = 0; i < maxCreatures; i++)
             {
-                Creatures[i] = new Creature(this);
+                Entities[i] = new Creature(this);
             }
-            for (int i = 0; i < StartCreatures; i++)
+            for (int i = 0; i < startCreatures; i++)
             {
-                Creatures[i].Activate();
+                Entities[i].Activate();
             }
 
         }
 
-        public void InitialiseFlora(int Coverage)
+        public void InitialiseFlora(int coverage)
         {
-            if (Coverage < 0 || Coverage > 100)
+            if (coverage < 0 || coverage > 100)
             {
                 throw new Exception("Coverage must be a percentage between 0 and 100");
             }
@@ -80,30 +78,30 @@ namespace EcoSim.Logic
                 var flora = new List<Flora>();
                 foreach (var pos in Positions)
                 {
-                    if (pos.Altitude > 0 && RandNum.Integer(100) < Coverage)
+                    if (pos.Altitude > 0 && RandNum.Integer(100) < coverage)
                         flora.Add(new Flora(this, pos.X, pos.Y));
                 }
                 Flora = flora.ToArray();
             }
         }
 
-        public int CheckXCoord(int XCoord)
+        public int CheckXCoord(int xCoord)
         {
-            if (XCoord >= Width)
+            if (xCoord >= Width)
             {
                 if (WorldWrap)
-                    return XCoord - Width;
+                    return xCoord - Width;
                 else
                     return Width - 1;
             }
-            else if (XCoord < 0)
+            else if (xCoord < 0)
             {
                 if (WorldWrap)
-                    return XCoord + Width;
+                    return xCoord + Width;
                 else
                     return 0;
             }
-            return XCoord;
+            return xCoord;
         }
 
         public int CheckYCoord(int YCoord)
@@ -211,7 +209,7 @@ namespace EcoSim.Logic
         public void Process()
         {
             
-            Parallel.ForEach(Creatures, c =>
+            Parallel.ForEach(Entities, c =>
             {
                 c.Process();
             });

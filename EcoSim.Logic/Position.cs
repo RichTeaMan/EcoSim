@@ -44,7 +44,7 @@ namespace EcoSim.Logic
             get { return Creature != null; }
         }
 
-        public EcoSim.Logic.AI_Entities.Creature Creature { get; set; }
+        public EcoSim.Logic.AI_Entities.Entity Creature { get; set; }
         
         public Flora Flora { get; set; }
 

@@ -5,34 +5,17 @@ using System.Text;
 
 namespace EcoSim.Logic.AI_Entities
 {
-    public class Creature
+    public class Creature : Entity
     {
-        
-        public int XCoord { get; set; }
-        public int YCoord { get; set; }
-
-        public bool Active { get; private set; }
-
-        // The number of ticks until the next direction desicion is made
-        private int decisionTicks = 0;
         private int xVector;
         private int yVector;
 
-        public World World { get; private set; }
-
-        public Creature(World world)
+        public Creature(World world) : base(world)
         {
-            Active = false;
-            this.World = world;
+            Size = 8;
         }
 
-        public IList<Position> GetPositions()
-        {
-            var positions = World.GetPositions(XCoord - 4, YCoord - 4, 8, 8);
-            return positions;
-        }
-
-        public void Activate()
+        public override void Activate()
         {
             bool inWater;
             do
@@ -47,12 +30,7 @@ namespace EcoSim.Logic.AI_Entities
             Active = true;
         }
 
-        public static void ProcessCreature(object Creature)
-        {
-            (Creature as Creature).Process();
-        }
-
-        public void Process()
+        public override void Process()
         {
             if (Active)
             {
@@ -77,21 +55,6 @@ namespace EcoSim.Logic.AI_Entities
                 decisionTicks--;
             }
             
-        }
-
-        /// <summary>
-        /// Moves the creature, and returns its new position.
-        /// </summary>
-        /// <param name="XVector"></param>
-        /// <param name="YVector"></param>
-        /// <returns></returns>
-        private Position Move(int XVector, int YVector)
-        {
-            World[XCoord, YCoord].RemoveCreature();
-            XCoord = World.CheckXCoord(XCoord + XVector);
-            YCoord = World.CheckYCoord(YCoord + YVector);
-            World[XCoord, YCoord].Creature = this;
-            return World[XCoord, YCoord];
         }
     }
 }
