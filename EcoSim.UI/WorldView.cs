@@ -202,6 +202,8 @@ namespace EcoSim.UI
                 if (preBoundaryHeight > World.Height)
                 {
                     remainingHeight = preBoundaryHeight - World.Height;
+                    if (remainingHeight > World.Height)
+                        remainingHeight = World.Height - 1;
                     preBoundaryHeight = World.Height;
                 }
 
@@ -210,6 +212,8 @@ namespace EcoSim.UI
                 if (preBoundaryWidth > World.Width)
                 {
                     remainingWidth = preBoundaryWidth - World.Width;
+                    if (remainingWidth > World.Width)
+                        remainingWidth = World.Width - 1;
                     preBoundaryWidth = World.Width;
                 }
 
@@ -263,7 +267,7 @@ namespace EcoSim.UI
             var pos = World.GetUnsafePosition(x, y);
             if (pos.HasCreature)
                 CreaturesToDraw.Add(new Point(pixelX, pixelY));
-            else if (pos.Altitude < 0)
+            else if (pos.HasWater)
                 Draw.Pixel(bmpData, pixelX, pixelY, WaterColor.ToArgb());
             else if (pos.HasAliveFlora)
                 Draw.Pixel(bmpData, pixelX, pixelY, Color.LawnGreen.ToArgb());
