@@ -17,7 +17,9 @@ namespace EcoSim.Logic
 
         public Flora[] Flora { get; private set; }
 
-        private ConcurrentStack<Position> PositionProcess;
+        public IEnumerable<WaterSource> WaterSources { get; private set; }
+
+        public const int WaterRate = 2;
 
         public int FloraCount
         {
@@ -34,10 +36,10 @@ namespace EcoSim.Logic
         public World(int width, int height, bool worldWrap)
         {
             Tick = 1;
-            this.Height = height;
-            this.Width = width;
-            this.WorldWrap = worldWrap;
-
+            Height = height;
+            Width = width;
+            WorldWrap = worldWrap;
+            
             Positions = new Position[width * height];
             Parallel.ForEach(Enumerable.Range(0, width), i =>
             {
@@ -46,8 +48,29 @@ namespace EcoSim.Logic
                     Positions[i + (height * j)] = new Position(this, i, j);
                 });
             });
-            
-            PositionProcess = new ConcurrentStack<Position>();
+
+            Parallel.ForEach(Positions, p =>
+            {
+                p.SetSurroundingPositions();
+            });
+
+            var waterSources = new List<WaterSource>();
+            foreach (var i in Enumerable.Range(0, 40))
+            {
+                var p = GetRandomPosition();
+                var ws = new WaterSource(this, p.X, p.Y, RandNum.Integer(1000, 10000), (short)RandNum.Integer(3, 12));
+                waterSources.Add(ws);
+            }
+            WaterSources = waterSources;
+        }
+
+        public Position GetRandomPosition()
+        {
+            var x = GetRandomWidth();
+            var y = GetRandomHeight();
+
+            var position = GetPosition(x, y);
+            return position;
         }
 
         public void InitialiseCreatures(int startCreatures, int maxCreatures)
@@ -87,40 +110,40 @@ namespace EcoSim.Logic
 
         public int CheckXCoord(int xCoord)
         {
-            if (xCoord >= Width)
+            while (xCoord >= Width)
             {
                 if (WorldWrap)
-                    return xCoord - Width;
+                    xCoord -= Width;
                 else
                     return Width - 1;
             }
-            else if (xCoord < 0)
+            while (xCoord < 0)
             {
                 if (WorldWrap)
-                    return xCoord + Width;
+                    xCoord += Width;
                 else
                     return 0;
             }
             return xCoord;
         }
 
-        public int CheckYCoord(int YCoord)
+        public int CheckYCoord(int yCoord)
         {
-            if (YCoord >= Height)
+            while (yCoord >= Height)
             {
                 if (WorldWrap)
-                    return YCoord - Height;
+                    yCoord -= Height;
                 else
-                    return Width - 1;
+                    return Height - 1;
             }
-            else if (YCoord < 0)
+            while (yCoord < 0)
             {
                 if (WorldWrap)
-                    return YCoord + Height;
+                    yCoord += Height;
                 else
                     return 0;
             }
-            return YCoord;
+            return yCoord;
         }
 
         /// <summary>
@@ -134,6 +157,22 @@ namespace EcoSim.Logic
             get
             {
                 return GetPosition(x, y);
+            }
+        }
+
+        public IEnumerable<Position> GetRow(int row)
+        {
+            foreach (var i in Enumerable.Range(0, Width))
+            {
+                yield return GetPosition(i, row);
+            }
+        }
+
+        public IEnumerable<Position> GetColumn(int column)
+        {
+            foreach (var i in Enumerable.Range(0, Height))
+            {
+                yield return GetPosition(column, i);
             }
         }
 
@@ -176,8 +215,11 @@ namespace EcoSim.Logic
         /// <returns></returns>
         public Position GetPosition(int x, int y)
         {
-            return Positions[CheckXCoord(x) + (CheckYCoord(y) * Height)];
-            
+            var _cX = CheckXCoord(x);
+            var _cY = CheckYCoord(y);
+            var yOffset = _cY * Height;
+            var i = _cX + yOffset;
+            return Positions[i];
         }
 
         /// <summary>
@@ -208,26 +250,30 @@ namespace EcoSim.Logic
 
         public void Process()
         {
-            
-            Parallel.ForEach(Entities, c =>
+            if (Entities != null)
             {
-                c.Process();
-            });
-
-            var positionProcess = Interlocked.Exchange<ConcurrentStack<Position>>(ref PositionProcess, new ConcurrentStack<Position>());
-
-            Position pos;
-            while (positionProcess.TryPop(out pos))
-            {
-                pos.ProcessWater();
+                Parallel.ForEach(Entities, c =>
+                {
+                    c.Process();
+                });
             }
 
-            Tick++;
-        }
+            if (WaterSources != null)
+            {
+                Parallel.ForEach(WaterSources, ws =>
+                {
+                    ws.Process();
+                });
+            }
 
-        public void AddToProcessQueue(Position position)
-        {
-            PositionProcess.Push(position);
+            if (Positions != null)
+            {
+                Parallel.ForEach(Positions, p =>
+                {
+                    p.ProcessWater();
+                });
+            }
+            Tick++;
         }
     }
 }

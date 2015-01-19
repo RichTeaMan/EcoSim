@@ -16,10 +16,6 @@ namespace EcoSim.Logic
 
         public Position Position { get; private set; }
 
-        public int X { get { return Position.X; } }
-
-        public int Y { get { return Position.Y; } }
-
         public WaterSource(World world, int x, int y, int totalWater, short waterRate)
         {
             World = world;
@@ -30,9 +26,11 @@ namespace EcoSim.Logic
 
         public void Process()
         {
-            Position.WaterLevel += WaterRate;
-            
-
+            if (RemainingWater != 0)
+            {
+                Position.AdjustWaterLevel(WaterRate);
+                RemainingWater -= WaterRate;
+            }
         }
     }
 }
