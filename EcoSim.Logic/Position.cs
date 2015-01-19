@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace EcoSim.Logic
 {
-    public class Position
+    public sealed class Position
     {
-        public World World{get; private set;}
+        public World World { get; private set; }
 
         private short _Altitude;
         public short Altitude
@@ -30,6 +31,14 @@ namespace EcoSim.Logic
                 {
                     _Altitude = -100;
                 }
+            }
+        }
+
+        public short TotalAltitude
+        {
+            get
+            {
+                return (short)(Altitude + WaterLevel);
             }
         }
 
@@ -58,9 +67,17 @@ namespace EcoSim.Logic
             get { return HasFlora && Flora.GrowthTime < World.Tick; }
         }
 
-        public short WaterLevel { get; set; }
+        private int _waterLevel;
+        public short WaterLevel { get { return (short)_waterLevel; } }
 
-        public bool HasWater { get { return Altitude < 0; } }
+        public bool HasWater { get { return WaterLevel > 0; } }
+
+        public Position NorthPosition { get; private set; }
+        public Position EastPosition { get; private set; }
+        public Position SouthPosition { get; private set; }
+        public Position WestPosition { get; private set; }
+
+        public IEnumerable<Position> SurroundingPositions { get; private set; }
 
         public Position(World world, int x, int y)
         {
@@ -68,6 +85,16 @@ namespace EcoSim.Logic
             Altitude = 0;
             X = x;
             Y = y;
+        }
+
+        public void SetSurroundingPositions()
+        {
+            NorthPosition = GetNorthPosition();
+            EastPosition = GetEastPosition();
+            SouthPosition = GetSouthPosition();
+            WestPosition = GetWestPosition();
+
+            SurroundingPositions = new[] { NorthPosition, EastPosition, SouthPosition, WestPosition };
         }
 
         public void RemoveCreature()
@@ -90,25 +117,62 @@ namespace EcoSim.Logic
 
         public void ProcessWater()
         {
-            
+            if (WaterLevel == 0)
+                return;
+
+            var sPositions = SurroundingPositions.Where(p => p.TotalAltitude < TotalAltitude).ToArray();
+            if (sPositions.Length == 0)
+                return;
+            var targetHeightD = (double)(sPositions.Sum(p => p.TotalAltitude) + TotalAltitude) / (sPositions.Length + 1);
+            var targetHeight = (int)Math.Ceiling(targetHeightD);
+
+            //if (targetHeight <= sPositions.Min(p => p.TotalAltitude) + 1)
+            //    return;
+
+            foreach (var p in sPositions.OrderByDescending(p => p.TotalAltitude))
+            {
+                var dAlt = (short)(targetHeight - p.TotalAltitude);
+                if (dAlt == 0)
+                    continue;
+
+                AdjustWaterLevel((short)-dAlt);
+                p.AdjustWaterLevel(dAlt);
+
+                if (WaterLevel == 0)
+                    return;
+            }
         }
 
-        public Position GetNorthPosition()
+        /// <summary>
+        /// Changes the water by the given amount, ie WaterLevel = WaterLevel + level
+        /// </summary>
+        /// <param name="level"></param>
+        /// <returns></returns>
+        public short AdjustWaterLevel(short level)
+        {
+            Interlocked.Add(ref _waterLevel, level);
+            // is there an atomic way to do this check?
+            if (_waterLevel < 0)
+                _waterLevel = 0;
+            return (short)_waterLevel;
+        }
+
+        private Position GetNorthPosition()
         {
             return World[X, Y - 1];
         }
 
-        public Position GetEastPosition()
+        private Position GetEastPosition()
         {
             return World[X + 1, Y];
         }
 
-        public Position GetSouthPosition()
+        private Position GetSouthPosition()
         {
             return World[X, Y + 1];
         }
 
-        public Position GetWestPosition()
+        private Position GetWestPosition()
         {
             return World[X - 1, Y];
         }
