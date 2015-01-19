@@ -38,8 +38,8 @@ namespace EcoSim.Logic
         {
             MinStep = 1;
             MaxStep = 10;
-            Seeds = 20;
-            HighAltitudeProbability = 0.2;
+            Seeds = 8;
+            HighAltitudeProbability = 0.02;
         }
 
         public string Summary { get { return "Creates a world getting random coordinates and then making random steps in altitude from each of those points."; } }
@@ -56,7 +56,7 @@ namespace EcoSim.Logic
                 {
                     if (!world[x, y].Initialised)
                     {
-                        world[x, y].Altitude = 0;// (short)world.random.Next(-100, 101);
+                        world[x, y].Altitude = 70;// (short)world.random.Next(-100, 101);
                         world[x, y].Initialised = true;
                         RandomPointsWorldSeed worldSeed = new RandomPointsWorldSeed(world, this, new Point(x, y), world.GetPosition(x, y));
 
@@ -71,6 +71,7 @@ namespace EcoSim.Logic
             }
             while (WorkingThreads > 0)
                 Thread.Sleep(5);
+
             return;
         }
         
@@ -144,7 +145,7 @@ namespace EcoSim.Logic
                         }
                         else
                         {
-                            if (RandNum.Double() > worldSeed.WorldFormer.HighAltitudeProbability)
+                            if (RandNum.Double() < worldSeed.WorldFormer.HighAltitudeProbability)
                                 Pos2.Altitude = (short)(Pos.Altitude + Step);
                             else
                                 Pos2.Altitude = (short)(Pos.Altitude - Step);
