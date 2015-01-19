@@ -21,6 +21,8 @@ namespace EcoSim.UI
         {
             InitializeComponent();
             StartSim = false;
+
+            lbl_Status.Text = string.Empty;
         }
 
         private async void but_OK_Click(object sender, EventArgs e)
@@ -35,12 +37,24 @@ namespace EcoSim.UI
                 var former = worldCtrl.WorldFormer;
                 await Task.Run(() =>
                 {
+                    UpdateStatus("Building World");
                     var newWorld = new World(worldCtrl.WorldWidth, worldCtrl.WorldHeight, worldCtrl.WorldWrap);
+                    UpdateStatus("Terraforming World");
                     former.Generate(newWorld);
 
+                    foreach (var i in Enumerable.Range(0, 2000))
+                    {
+                        if (i % 100 == 0)
+                            UpdateStatus("Simulating World: {0} ticks", i);
+                        newWorld.Process();
+                    }
+
+                    UpdateStatus("Building Flora");
                     newWorld.InitialiseFlora(floraCtrl.InitialCoverage);
+                    UpdateStatus("Building Creatures");
                     newWorld.InitialiseCreatures(creaturesCtrl.StartPopulation, creaturesCtrl.MaxPopulation);
 
+                    UpdateStatus("Complete");
                     CreatedWorld = newWorld;
                 });
 
@@ -57,6 +71,13 @@ namespace EcoSim.UI
                 but_OK.Text = buttonText;
                 Cursor = Cursors.Default;
             }
+        }
+
+        private void UpdateStatus(string status, params object[] args)
+        {
+            var message = string.Format(status, args);
+            
+            lbl_Status.BeginInvoke((MethodInvoker) delegate { lbl_Status.Text = message; });
         }
 
         private void but_Cancel_Click(object sender, EventArgs e)

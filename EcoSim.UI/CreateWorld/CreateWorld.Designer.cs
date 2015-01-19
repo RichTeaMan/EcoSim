@@ -33,18 +33,19 @@
             this.but_OK = new System.Windows.Forms.Button();
             this.but_Cancel = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tab_World = new System.Windows.Forms.TabPage();
+            this.worldCtrl = new EcoSim.UI.WorldCreateWorld();
             this.tab_Creatures = new System.Windows.Forms.TabPage();
             this.creaturesCtrl = new EcoSim.UI.CreaturesCreateWorld();
             this.tab_Flora = new System.Windows.Forms.TabPage();
             this.floraCtrl = new EcoSim.UI.FloraCreateWorld();
-            this.tab_World = new System.Windows.Forms.TabPage();
-            this.worldCtrl = new EcoSim.UI.WorldCreateWorld();
+            this.lbl_Status = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.tab_World.SuspendLayout();
             this.tab_Creatures.SuspendLayout();
             this.tab_Flora.SuspendLayout();
-            this.tab_World.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -68,9 +69,10 @@
             this.tableLayoutPanel2.ColumnCount = 3;
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 77.44566F));
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 22.55435F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 84F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 85F));
             this.tableLayoutPanel2.Controls.Add(this.but_OK, 1, 0);
             this.tableLayoutPanel2.Controls.Add(this.but_Cancel, 2, 0);
+            this.tableLayoutPanel2.Controls.Add(this.lbl_Status, 0, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 387);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -82,7 +84,7 @@
             // but_OK
             // 
             this.but_OK.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.but_OK.Location = new System.Drawing.Point(302, 3);
+            this.but_OK.Location = new System.Drawing.Point(301, 3);
             this.but_OK.Name = "but_OK";
             this.but_OK.Size = new System.Drawing.Size(81, 22);
             this.but_OK.TabIndex = 0;
@@ -93,9 +95,9 @@
             // but_Cancel
             // 
             this.but_Cancel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.but_Cancel.Location = new System.Drawing.Point(389, 3);
+            this.but_Cancel.Location = new System.Drawing.Point(388, 3);
             this.but_Cancel.Name = "but_Cancel";
-            this.but_Cancel.Size = new System.Drawing.Size(79, 22);
+            this.but_Cancel.Size = new System.Drawing.Size(80, 22);
             this.but_Cancel.TabIndex = 1;
             this.but_Cancel.Text = "Cancel";
             this.but_Cancel.UseVisualStyleBackColor = true;
@@ -112,44 +114,6 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(471, 378);
             this.tabControl1.TabIndex = 3;
-            // 
-            // tab_Creatures
-            // 
-            this.tab_Creatures.Controls.Add(this.creaturesCtrl);
-            this.tab_Creatures.Location = new System.Drawing.Point(4, 22);
-            this.tab_Creatures.Name = "tab_Creatures";
-            this.tab_Creatures.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_Creatures.Size = new System.Drawing.Size(442, 283);
-            this.tab_Creatures.TabIndex = 0;
-            this.tab_Creatures.Text = "Creatures";
-            this.tab_Creatures.UseVisualStyleBackColor = true;
-            // 
-            // creaturesCtrl
-            // 
-            this.creaturesCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.creaturesCtrl.Location = new System.Drawing.Point(3, 3);
-            this.creaturesCtrl.Name = "creaturesCtrl";
-            this.creaturesCtrl.Size = new System.Drawing.Size(436, 277);
-            this.creaturesCtrl.TabIndex = 0;
-            // 
-            // tab_Flora
-            // 
-            this.tab_Flora.Controls.Add(this.floraCtrl);
-            this.tab_Flora.Location = new System.Drawing.Point(4, 22);
-            this.tab_Flora.Name = "tab_Flora";
-            this.tab_Flora.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_Flora.Size = new System.Drawing.Size(442, 283);
-            this.tab_Flora.TabIndex = 1;
-            this.tab_Flora.Text = "Flora";
-            this.tab_Flora.UseVisualStyleBackColor = true;
-            // 
-            // floraCtrl
-            // 
-            this.floraCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.floraCtrl.Location = new System.Drawing.Point(3, 3);
-            this.floraCtrl.Name = "floraCtrl";
-            this.floraCtrl.Size = new System.Drawing.Size(436, 277);
-            this.floraCtrl.TabIndex = 0;
             // 
             // tab_World
             // 
@@ -169,6 +133,53 @@
             this.worldCtrl.Size = new System.Drawing.Size(463, 352);
             this.worldCtrl.TabIndex = 0;
             // 
+            // tab_Creatures
+            // 
+            this.tab_Creatures.Controls.Add(this.creaturesCtrl);
+            this.tab_Creatures.Location = new System.Drawing.Point(4, 22);
+            this.tab_Creatures.Name = "tab_Creatures";
+            this.tab_Creatures.Padding = new System.Windows.Forms.Padding(3);
+            this.tab_Creatures.Size = new System.Drawing.Size(463, 352);
+            this.tab_Creatures.TabIndex = 0;
+            this.tab_Creatures.Text = "Creatures";
+            this.tab_Creatures.UseVisualStyleBackColor = true;
+            // 
+            // creaturesCtrl
+            // 
+            this.creaturesCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.creaturesCtrl.Location = new System.Drawing.Point(3, 3);
+            this.creaturesCtrl.Name = "creaturesCtrl";
+            this.creaturesCtrl.Size = new System.Drawing.Size(457, 346);
+            this.creaturesCtrl.TabIndex = 0;
+            // 
+            // tab_Flora
+            // 
+            this.tab_Flora.Controls.Add(this.floraCtrl);
+            this.tab_Flora.Location = new System.Drawing.Point(4, 22);
+            this.tab_Flora.Name = "tab_Flora";
+            this.tab_Flora.Padding = new System.Windows.Forms.Padding(3);
+            this.tab_Flora.Size = new System.Drawing.Size(463, 352);
+            this.tab_Flora.TabIndex = 1;
+            this.tab_Flora.Text = "Flora";
+            this.tab_Flora.UseVisualStyleBackColor = true;
+            // 
+            // floraCtrl
+            // 
+            this.floraCtrl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.floraCtrl.Location = new System.Drawing.Point(3, 3);
+            this.floraCtrl.Name = "floraCtrl";
+            this.floraCtrl.Size = new System.Drawing.Size(457, 346);
+            this.floraCtrl.TabIndex = 0;
+            // 
+            // lbl_Status
+            // 
+            this.lbl_Status.AutoSize = true;
+            this.lbl_Status.Location = new System.Drawing.Point(3, 0);
+            this.lbl_Status.Name = "lbl_Status";
+            this.lbl_Status.Size = new System.Drawing.Size(37, 13);
+            this.lbl_Status.TabIndex = 2;
+            this.lbl_Status.Text = "Status";
+            // 
             // CreateWorld
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -179,10 +190,11 @@
             this.Text = "CreateWorld";
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel2.PerformLayout();
             this.tabControl1.ResumeLayout(false);
+            this.tab_World.ResumeLayout(false);
             this.tab_Creatures.ResumeLayout(false);
             this.tab_Flora.ResumeLayout(false);
-            this.tab_World.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -200,5 +212,6 @@
         private CreaturesCreateWorld creaturesCtrl;
         private FloraCreateWorld floraCtrl;
         private WorldCreateWorld worldCtrl;
+        private System.Windows.Forms.Label lbl_Status;
     }
 }
