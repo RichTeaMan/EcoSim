@@ -68,7 +68,7 @@ namespace EcoSim.Logic
         }
 
         private int _waterLevel;
-        public short WaterLevel { get { return (short)_waterLevel; } }
+        public int WaterLevel { get { return _waterLevel; } }
 
         public bool HasWater { get { return WaterLevel > 0; } }
 
@@ -117,13 +117,13 @@ namespace EcoSim.Logic
 
         public void ProcessWater()
         {
-            if (WaterLevel == 0)
+            if (_waterLevel == 0)
                 return;
 
             var sPositions = SurroundingPositions.Where(p => p.TotalAltitude < TotalAltitude).ToArray();
             if (sPositions.Length == 0)
                 return;
-            var targetHeightD = (double)(sPositions.Sum(p => p.TotalAltitude) + TotalAltitude) / (sPositions.Length + 1);
+            var targetHeightD = (sPositions.Sum(p => p.TotalAltitude) + TotalAltitude) / (double)(sPositions.Length + 1);
             var targetHeight = (int)Math.Ceiling(targetHeightD);
 
             //if (targetHeight <= sPositions.Min(p => p.TotalAltitude) + 1)
@@ -131,14 +131,14 @@ namespace EcoSim.Logic
 
             foreach (var p in sPositions.OrderByDescending(p => p.TotalAltitude))
             {
-                var dAlt = (short)(targetHeight - p.TotalAltitude);
+                var dAlt = targetHeight - p.TotalAltitude;
                 if (dAlt == 0)
                     continue;
 
-                AdjustWaterLevel((short)-dAlt);
+                AdjustWaterLevel(-dAlt);
                 p.AdjustWaterLevel(dAlt);
 
-                if (WaterLevel == 0)
+                if (_waterLevel == 0)
                     return;
             }
         }
@@ -148,13 +148,13 @@ namespace EcoSim.Logic
         /// </summary>
         /// <param name="level"></param>
         /// <returns></returns>
-        public short AdjustWaterLevel(short level)
+        public int AdjustWaterLevel(int level)
         {
             Interlocked.Add(ref _waterLevel, level);
             // is there an atomic way to do this check?
             if (_waterLevel < 0)
                 _waterLevel = 0;
-            return (short)_waterLevel;
+            return _waterLevel;
         }
 
         private Position GetNorthPosition()
