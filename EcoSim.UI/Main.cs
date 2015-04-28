@@ -54,10 +54,11 @@ namespace EcoSim.UI
             {
                 var lines = new List<string>();
                 lines.Add(string.Format("X: {0} Y: {1}", position.X, position.Y));
-                lines.Add(string.Format("Altitude: {0}", position.Altitude));
                 lines.Add(string.Format("Creature: {0}", position.Creature != null));
+                lines.Add(string.Format("Altitude: {0}", position.Altitude));
                 lines.Add(string.Format("Has Water: {0}", position.HasWater));
                 lines.Add(string.Format("Water Level: {0}", position.WaterLevel));
+                lines.Add(string.Format("Total Altitude: {0}", position.TotalAltitude));
 
                 infoBox.Lines = lines.ToArray();
             }
