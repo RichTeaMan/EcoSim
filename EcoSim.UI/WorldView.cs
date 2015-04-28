@@ -110,6 +110,7 @@ namespace EcoSim.UI
             {
                 this.Paint += new PaintEventHandler(WorldView_Paint);
                 SetGroundColors(Color.LightGoldenrodYellow, Color.Brown, -100, 100);
+                SetWaterColors(Color.DarkBlue, Color.LightSkyBlue, 1, 100);
             }
             WaterColor = Color.FromArgb(130, Color.LightSeaGreen);
         }
@@ -177,10 +178,49 @@ namespace EcoSim.UI
             }
         }
 
+        private int[] WaterColors;
+        private int LowestDepth;
+        private int HighestDepth;
+
+        private void SetWaterColors(Color DarkestColor, Color LightestColor, int lowest, int highest)
+        {
+            LowestDepth = lowest;
+            HighestDepth = highest;
+
+            int levels = (highest - lowest) + 1;
+            WaterColors = new int[levels];
+
+            double RedStep = DarkestColor.R - LightestColor.R;
+            RedStep /= levels;
+
+            double GreenStep = DarkestColor.G - LightestColor.G;
+            GreenStep /= levels;
+
+            double BlueStep = DarkestColor.B - LightestColor.B;
+            BlueStep /= levels;
+
+            for (int i = 0; i < levels; i++)
+            {
+                WaterColors[i] = Color.FromArgb(
+                    Convert.ToInt32(LightestColor.R + i * RedStep),
+                    Convert.ToInt32(LightestColor.G + i * GreenStep),
+                    Convert.ToInt32(LightestColor.B + i * BlueStep)).ToArgb();
+            }
+        }
+
         private int GetGroundColor(int altitude)
         {
             int a = altitude - LowestAltitude;
             return GroundColors[a];
+        }
+
+        private int GetWaterColor(int altitude)
+        {
+            if (altitude > HighestDepth)
+                altitude = HighestDepth - 1;
+            else if (altitude < LowestDepth)
+                altitude = LowestDepth;
+            return WaterColors[altitude];
         }
 
         private void DrawFunc()
@@ -268,7 +308,7 @@ namespace EcoSim.UI
             if (pos.HasCreature)
                 CreaturesToDraw.Add(new Point(pixelX, pixelY));
             else if (pos.HasWater)
-                Draw.Pixel(bmpData, pixelX, pixelY, WaterColor.ToArgb());
+                Draw.Pixel(bmpData, pixelX, pixelY, GetWaterColor(pos.WaterLevel));
             else if (pos.HasAliveFlora)
                 Draw.Pixel(bmpData, pixelX, pixelY, Color.LawnGreen.ToArgb());
             else
