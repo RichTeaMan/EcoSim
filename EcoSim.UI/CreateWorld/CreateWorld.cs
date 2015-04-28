@@ -42,7 +42,7 @@ namespace EcoSim.UI
                     UpdateStatus("Terraforming World");
                     former.Generate(newWorld);
 
-                    foreach (var i in Enumerable.Range(0, 2000))
+                    foreach (var i in Enumerable.Range(0, 500))
                     {
                         if (i % 100 == 0)
                             UpdateStatus("Simulating World: {0} ticks", i);

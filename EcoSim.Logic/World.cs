@@ -58,7 +58,7 @@ namespace EcoSim.Logic
             foreach (var i in Enumerable.Range(0, 40))
             {
                 var p = GetRandomPosition();
-                var ws = new WaterSource(this, p.X, p.Y, RandNum.Integer(1000, 10000), (short)RandNum.Integer(3, 12));
+                var ws = new WaterSource(this, p.X, p.Y, RandNum.Integer(50, 100), (short)RandNum.Integer(3, 12));
                 waterSources.Add(ws);
             }
             WaterSources = waterSources;
