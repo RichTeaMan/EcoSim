@@ -106,11 +106,15 @@ namespace EcoSim.UI
                 if (valueCtrl != null)
                 {
                     valueCtrl.Enabled = prop.CanWrite;
-                    table.RowStyles.Add(new RowStyle(SizeType.Absolute, 30F));
+                    table.RowStyles.Add(new RowStyle());//(SizeType.Absolute, 30F));
                     var lbl = new Label();
+                    lbl.AutoSize = false;
+                    lbl.Location = new Point(0, 5);
                     lbl.Text = prop.Name;
+                    
                     table.Controls.Add(lbl, 0, rowCount);
-                    lbl.Location = new Point(0, 0);
+                    lbl.Location = new Point(0, 5);
+                    
                     table.Controls.Add(valueCtrl, 1, rowCount);
                     valueCtrl.Location = new Point(0, 0);
                     rowCount++;
