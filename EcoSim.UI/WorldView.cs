@@ -395,6 +395,10 @@ namespace EcoSim.UI
                 case Keys.Left:
                     LeftKey = false;
                     break;
+                    
+                case Keys.Z:
+                    this.ViewScale = 1.0;
+                    break;
             }
         }
 
