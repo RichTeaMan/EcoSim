@@ -114,34 +114,7 @@ namespace EcoSim.Logic
             }
             return 0;
         }
-
-        public void ProcessWater()
-        {
-            if (_waterLevel == 0)
-                return;
-
-            var sPositions = SurroundingPositions.Where(p => p.TotalAltitude < TotalAltitude).ToArray();
-            if (sPositions.Length == 0)
-                return;
-            var targetHeightD = (sPositions.Sum(p => p.TotalAltitude) + TotalAltitude) / (double)(sPositions.Length + 1);
-            var targetHeight = (int)Math.Ceiling(targetHeightD);
-
-            //if (targetHeight <= sPositions.Min(p => p.TotalAltitude) + 1)
-            //    return;
-
-            foreach (var p in sPositions.OrderByDescending(p => p.TotalAltitude))
-            {
-                var dAlt = targetHeight - p.TotalAltitude;
-                if (dAlt == 0)
-                    continue;
-
-                AdjustWaterLevel(-dAlt);
-                p.AdjustWaterLevel(dAlt);
-
-                if (_waterLevel == 0)
-                    return;
-            }
-        }
+        
 
         /// <summary>
         /// Changes the water by the given amount, ie WaterLevel = WaterLevel + level

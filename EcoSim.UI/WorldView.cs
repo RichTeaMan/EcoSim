@@ -216,7 +216,7 @@ namespace EcoSim.UI
 
         private int GetWaterColor(int altitude)
         {
-            if (altitude > HighestDepth)
+            if (altitude >= HighestDepth)
                 altitude = HighestDepth - 1;
             else if (altitude < LowestDepth)
                 altitude = LowestDepth;

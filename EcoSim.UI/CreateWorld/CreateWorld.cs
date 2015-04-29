@@ -42,11 +42,12 @@ namespace EcoSim.UI
                     UpdateStatus("Terraforming World");
                     former.Generate(newWorld);
 
-                    foreach (var i in Enumerable.Range(0, 500))
+                    foreach (var p in newWorld.Positions)
                     {
-                        if (i % 100 == 0)
-                            UpdateStatus("Simulating World: {0} ticks", i);
-                        newWorld.Process();
+                        if (p.TotalAltitude < 0)
+                        {
+                            p.AdjustWaterLevel(-p.TotalAltitude);
+                        }
                     }
 
                     UpdateStatus("Building Flora");

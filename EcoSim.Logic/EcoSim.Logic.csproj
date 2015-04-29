@@ -74,8 +74,6 @@
     <Compile Include="IWorldFormer.cs" />
     <Compile Include="PlainWorldFormer.cs" />
     <Compile Include="RandNum.cs" />
-    <Compile Include="RiverTestWorldFormer.cs" />
-    <Compile Include="WaterSource.cs" />
     <Compile Include="World.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -17,8 +17,6 @@ namespace EcoSim.Logic
 
         public Flora[] Flora { get; private set; }
 
-        public IEnumerable<WaterSource> WaterSources { get; private set; }
-
         public const int WaterRate = 2;
 
         public int FloraCount
@@ -53,15 +51,6 @@ namespace EcoSim.Logic
             {
                 p.SetSurroundingPositions();
             });
-
-            var waterSources = new List<WaterSource>();
-            foreach (var i in Enumerable.Range(0, 40))
-            {
-                var p = GetRandomPosition();
-                var ws = new WaterSource(this, p.X, p.Y, RandNum.Integer(50, 100), (short)RandNum.Integer(3, 12));
-                waterSources.Add(ws);
-            }
-            WaterSources = waterSources;
         }
 
         public Position GetRandomPosition()
@@ -255,22 +244,6 @@ namespace EcoSim.Logic
                 Parallel.ForEach(Entities, c =>
                 {
                     c.Process();
-                });
-            }
-
-            if (WaterSources != null)
-            {
-                Parallel.ForEach(WaterSources, ws =>
-                {
-                    ws.Process();
-                });
-            }
-
-            if (Positions != null)
-            {
-                Parallel.ForEach(Positions, p =>
-                {
-                    p.ProcessWater();
                 });
             }
             Tick++;
